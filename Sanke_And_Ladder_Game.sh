@@ -1,5 +1,5 @@
 #!/bin/bash -x
-echo "---------------------------------------------------welcome Snake and ladder game---------------------------------------------------"
+echo "----------------------------------------------------------WELL COME SNAKE AND LADDER GAME----------------------------------------------------------------------------"
 
 #CONSTANT
 LADDER=1
@@ -7,46 +7,77 @@ SNAKE=2
 WINNING_POSITION=100
 INITIAL_POSITION=0
 
-#Variable
+#VARIABLE
 playerPosition=0
 diceCounter=0
-valid=true
+playerOnePosition=0
+playerTwoPosition=0
+chance=0
 
-#TO DECLARE FUNCTION
-declare -A diceCount
+#TO DECLARE PLAYER ONE AND TWO
+declare -A playerOneReport
+declare -A playerTwoReport
 
+#TO FUNCTION CHECK FOR OPTION
 function checkForOption(){
-while [ $valid ]
-	do
-		#TO VARIABLE ROLL DIE AND OPTION
-		rollDie=$((RANDOM%6+1))
-		option=$((RANDOM%3))
-	if [[ $option -eq $LADDER ]]
+	diceRoll=$(( RANDOM%6+1 ))
+	diceCounter=$(( $diceCounter+1 ))
+	snakeOrLadder=$(( RANDOM%3 ))
+	if [ $snakeOrLadder -eq $SNAKE ]
 	then
-		playerPosition=$(( $playerPosition + $rollDie ))
-		diceCounter=$(($diceCounter+1))
-	elif [[ $option -eq $SNAKE ]]
+	playerPosition=$(($playerPosition + $diceRoll ))
+	chance=$(( $chance+1 ))
+	elif [ $snakeOrLadder -eq $LADDER ]
 	then
-		playerPosition=$(( $playerPosition - $rollDie ))
-	
-	if [[ $playerPosition -eq $INITIAL_POSITION ]]
-	then
-		playerPosition=$(( $INITIAL_POSITION ))
-	fi
-	fi
-
-	if [[ $playerPosition -lt $WINNING_POSITION ]]
-	then
+		playerPosition=$(($playerPosition - $diceRoll ))
+	else
 		playerPosition=$(( $playerPosition ))
-	elif [[ $playerPosition -eq $WINNING_POSITION ]]
-	then
-		echo "You won"
-		break
+		chance=$(($chance+1))
 	fi
-done
-#TO PEINT 
-echo "Winning position " $playerPosition "die roll " $diceCounter
+	checkPosition $diceRoll $playerPosition
 }
 
+#TO FUNCTION CHECK THE POSITION
+function checkPosition(){
+		local diceValue=$1
+		local position=$2
+		if [[ $playerPosition -le $INITIAL_POSITION ]]
+		then
+			playerPosition=$INITIAL_POSITION
+		elif [[ $position -eq $WINNING_POSITION ]]
+		then
+			playerPosition=$WINNING_POSITION
+		elif [ $position -gt $WINNING_POSITION ]
+		then
+			playerPosition=$(( $position - $diceValue ))
+		fi
+}
+
+#TO CHECK THE PLAYER ONE AND TWO WON
+		while [ $playerOnePosition -lt $WINNING_POSITION ] && [ $playerTwoPosition -lt $WINNING_POSITION ]
+		do
+			if [ $(($chance%2)) -eq 0 ]
+			then
+				playerPosition=$playerOnePosition
+				checkForOption $playerPosition $playerOneCounter
+				playerOneReport[$diceCounter]=$playerPosition
+				playerOnePosition=$playerPosition
+				if [ $playerOnePosition -eq $WINNING_POSITION ]
+				then
+					echo "Player one won"
+					break
+				fi
+			else 
+				playerPosition=$playerTwoPosition
+				checkForOption $playerPosition $playerTwoCounter
+				playerTwoReport[$diceCounter]=$playerPosition
+				playerTwoPosition=$playerPosition
+				if [ $playerTwoPosition -eq $WINNING_POSITION ]
+				then
+					echo "player two won"
+					break
+				fi
+			fi
+		done
 #TO FUNCTION CALL
 checkForOption
