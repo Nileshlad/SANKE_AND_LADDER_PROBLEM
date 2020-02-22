@@ -1,14 +1,30 @@
 #!/bin/bash -x
-echo "--------------------------------------------------------------------WELL COME SNAKE AND LADDER GAME--------------------------------------------------------------------"
+echo "---------------------------------------------------welcome Snake and ladder game---------------------------------------------------"
 
-#CONSTANT
-INITIAL_POSSITION=0;
+#VARIABLE
+initialposition=0
+numberOfPossition=0
+playPossition=0
 
 #TO PRINT THE 1 TO 6 DIE RANDOM NUMBER
-function randomCount(){
+rollOfDie=$((RANDOM%6+1))
 
-	rollOfDie=$((RANDOM%6+1))
-	echo $rollOfDie
+#TO CHECK OPTION
+checkForOption=$((RANDOM%3))
 
-}
-randomCount
+case $checkForOption in
+	1)
+		echo "Ladder"
+		echo "dice no:$rollOfDie"
+		playPossition=$(($playPossition+$rollOfDie))
+		echo $playPossition
+		;;
+	2)
+		echo "Snake"
+		echo "dice no:$rollOfDie"
+		playPossition=$(($playPossition-$rollOfDie))
+		echo $playPossition
+		;;	
+	*)
+		echo "no play"
+esac
