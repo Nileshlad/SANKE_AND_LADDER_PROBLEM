@@ -1,30 +1,38 @@
 #!/bin/bash -x
 echo "---------------------------------------------------welcome Snake and ladder game---------------------------------------------------"
 
-#VARIABLE
-initialposition=0
-numberOfPossition=0
-playPossition=0
+#Constant for the program
+LADDER=1
+SNAKE=2
+NO_PLAY=0
+WINNING_POSITION=100
+INITIAL_POSITION=0
 
-#TO PRINT THE 1 TO 6 DIE RANDOM NUMBER
-rollOfDie=$((RANDOM%6+1))
+playerPosition=0
+valid=true
 
-#TO CHECK OPTION
-checkForOption=$((RANDOM%3))
+function checkForOption(){
+	while [ $valid ]
+	do
+		rollDie=$((RANDOM%6+1))
+		option=$((RANDOM%3))
+		if [ $option -eq $LADDER ]
+		then
+			playerPosition=$(( $playerPosition + $rollDie ))
+		elif [ $option -eq $SNAKE ]
+		then
+			playerPosition=$(( $playerPosition - $rollDie ))
+		else
+			echo "no play"
+		fi
 
-case $checkForOption in
-	1)
-		echo "Ladder"
-		echo "dice no:$rollOfDie"
-		playPossition=$(($playPossition+$rollOfDie))
-		echo $playPossition
-		;;
-	2)
-		echo "Snake"
-		echo "dice no:$rollOfDie"
-		playPossition=$(($playPossition-$rollOfDie))
-		echo $playPossition
-		;;	
-	*)
-		echo "no play"
-esac
+		if [ $playerPosition -gt $WINNING_POSITION ]
+		then
+			playerPosition=$(( $INITIAL_POSITION ))
+		elif [ $playerPosition -eq $WINNING_POSITION ]
+		then	
+		break
+		fi
+	done
+}
+checkForOption
