@@ -1,7 +1,14 @@
 #!/bin/bash -x
-echo "----------------------------------------welcome Snake and ladder game------------------------------------"
+echo "--------------------------------------------------------------------WELL COME SNAKE AND LADDER GAME--------------------------------------------------------------------"
 
-#VARIABLE
-initialposition=0;
+#CONSTANT
+INITIAL_POSSITION=0;
 
-echo "Sanke and ladder game played with single player at start position:$initialposition"
+#TO PRINT THE 1 TO 6 DIE RANDOM NUMBER
+function randomCount(){
+
+	rollOfDie=$((RANDOM%6+1))
+	echo $rollOfDie
+
+}
+randomCount
